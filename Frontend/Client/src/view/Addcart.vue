@@ -144,7 +144,7 @@ export default {
       for (const item of data.items) {
         data.idCart.push(item._id);
       }
-      // Now filteredItems contains only items with status === false
+      // Now filteredItems contains only items with status === false 
       console.log(data.idCart);
       data.items.forEach((item) => {
         item.product.totalPrice = item.product.price * item.quantity;
