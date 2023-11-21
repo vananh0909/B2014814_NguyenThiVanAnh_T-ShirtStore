@@ -66,7 +66,7 @@
             </div>
 
           </form>
-          <div class="dx"><i class="fas fa-sign-out-alt"></i></div>
+          <div class="dx" @click="logout"><i class="fas fa-sign-out-alt"></i></div>
         </div>
       </div>
     </nav>
@@ -78,6 +78,7 @@ import { useStore } from "vuex";
 import Product from "../services/product.service";
 import { http_getAll, http_getOne } from "../assets/js/common.http";
 import { onMounted, reactive, ref, watch } from "vue";
+import { useRouter } from 'vue-router';
 export default {
   name: "Header",
   setup() {
@@ -113,7 +114,21 @@ export default {
     onMounted(async () => {
       await fetchPro();
     });
-    return { searchQuery, searchProducts, data };
+    const router = useRouter();
+    const logout = () => {
+    // Clear session storage
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('CustomerName');
+    sessionStorage.removeItem('CustomerId');
+    sessionStorage.removeItem('roleName');
+    sessionStorage.removeItem('roleId');
+
+    // Redirect to the login page
+    router.push('/login');
+  };
+
+  
+    return { searchQuery, searchProducts, data, logout};
   },
 };
 </script>

@@ -23,7 +23,7 @@
                 <h3 style="text-align: center; font-weight: bold" class="">
                   {{ product.name }}
                 </h3>
-                <p style="margin-left: 40%">{{ product.price }}₫</p>
+                <p style="margin-left: 28%">{{ product.price }}₫</p>
                 <!-- <p>MÔ TẢ SẢN PHẨM</p> -->
                 <div class="gach-ngang"></div>
                 <div class="thongtin">
@@ -50,7 +50,7 @@
                     </span>
                   </p>
                   <p>• CHẤT LIỆU : {{ product.material }}</p>
-                  <p style="text-align: justify;">• MÔ TẢ : {{ product.description }}</p>
+                  <p>• MÔ TẢ : {{ product.description }}</p>
                   <div class="form-group">
                     <label for="quantity">• SỐ LƯỢNG : </label>
                     <input
@@ -92,9 +92,11 @@
 
 <script>
 import { onMounted, ref, watch, reactive } from "vue";
-import { alert_success, alert_error } from "../assets/js/common.alert";
+import { alert_success, alert_error, alert_warning } from "../assets/js/common.alert";
 import Cart from "../services/cart.service";
 import { http_create } from "../assets/js/common.http";
+import { useRouter } from "vue-router";
+import Order from "../services/order.service";
 export default {
   props: {
     product: {
@@ -108,23 +110,60 @@ export default {
       itemColor: {},
       quantity: "", //soluong
     });
-    const showBuy = () => {
-      console.log("Size nè:", data.itemSize);
-      console.log("Màu nè:", data.itemColor);
-      console.log("Số lượng:", data.quantity);
-      if (confirm("Bạn có chắc muốn đặt hàng không!")) {
-        alert_success(
-          "Đặt hàng thành công",
-          "Cảm ơn bạn đã yêu thương T-Shirt❤️!"
-        );
+    const router = useRouter();
+    const showBuy = async() => {
+      const isAuthenticated = sessionStorage.getItem("token");
+      // console.log(isAuthenticated);
+      if (isAuthenticated === null) {
+        confirm("Bạn cần phải đăng nhập để mua hàng!")
+        router.push({ name: "Login" }).then(() => {
+          location.reload();
+        });
+        // alert_warning("Thông Báo", "Bạn Cần Đăng Nhập Trước Khi Mua Sản Phẩm")
       } else {
-        alert_error("Quay Lại", "Hãy mua hàng nhé 🥹");
+        // console.log("Size nè:", data.itemSize);
+        // console.log("Màu nè:", data.itemColor);
+        // console.log("Số lượng:", data.quantity);
+        const id = sessionStorage.getItem("CustomerId")
+        const dataCart = {
+          customerId: id,
+          product: props.product._id,
+          quantity: data.quantity,
+          color: data.itemColor,
+          size: data.itemSize,
+          status: true
+        }
+        // console.log(dataCart);
+        const addCart = await http_create(Cart, dataCart)
+        console.log(addCart);
+        const idCus = sessionStorage.getItem("CustomerId");
+        // console.log(idCus);
+        const dataAddnow = {
+          customer: idCus,
+          total: props.product.price * addCart.quantity,
+          cart: addCart._id
+        }
+        // console.log(dataAddnow);
+        const buyPro = await http_create(Order, dataAddnow)
+        // console.log(buyPro);
+        if (buyPro) {
+          alert_success(
+            "Đặt hàng thành công",
+            "Cảm ơn bạn đã yêu thương T-Shirt❤️!"
+          );
+        } else {
+          alert_error("Quay Lại", "Hãy mua hàng nhé 🥹");
+        }
       }
     };
     const addProduct = async (product) => {
+      const id = sessionStorage.getItem("CustomerId");
       const dataCart = {
+        customerId: id,
         product: product._id,
-        quantity: "1",
+        quantity: data.quantity,
+        color: data.itemColor,
+        size: data.itemSize,
         // total: "0",
         status: false,
       };
@@ -132,7 +171,7 @@ export default {
       console.log(addCart);
       alert_success(
         "Thêm Thành Công",
-        `Bạn đã thêm thành công sản phẩm ${product.name} vào giỏ hàng 🫶!`
+        `Bạn đã thêm thành công ${data.quantity} sản phẩm ${product.name} vào giỏ hàng 🫶!`
       );
     };
     // lay size
@@ -196,7 +235,7 @@ export default {
   background-color: cadetblue !important;
 }
 .btn-danger {
-  margin-left: 6px;
+  margin-left: 5px;
 
   margin-top: 4%;
 }
@@ -218,26 +257,4 @@ export default {
   margin-top: 10%;
   margin-bottom: 8%;
 }
-.w-10{
-  cursor: pointer;
-}
-
-
-
-.form-group {
-  text-align: left; /* Đặt text-align thành left để đảm bảo nội dung nằm bên trái */
-}
-
-.form-group label, .form-group input {
-  display: inline-block;
-  vertical-align: top; /* Đặt vertical-align để giữ nội dung ở trên cùng */
-}
-
-.form-control {
-  width: 90px;
-  margin-left: 10px; 
-  margin-top: -6px;
-}
-
-
 </style>

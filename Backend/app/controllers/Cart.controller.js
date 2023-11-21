@@ -3,7 +3,7 @@ const Product = require("../models/Product.model");
 
 const create = async (req, res) => {
   try {
-    const { product, quantity, total } = req.body;
+    const { product, quantity, total, color, size, status, customerId } = req.body;
     // console.log(product);
     // Kiểm tra xem sản phẩm có tồn tại không
     const ProductData = await Product.findById(product);
@@ -17,6 +17,10 @@ const create = async (req, res) => {
       product: product,
       quantity: quantity,
       total: total,
+      color: color,
+      size: size,
+      customerId: customerId,
+      status: status
     });
 
     // Lưu vào cơ sở dữ liệu
@@ -62,7 +66,7 @@ const findAll = async (req, res) => {
 const update = async (req, res) => {
   try {
     const { id } = req.params;
-    const { product, quantity, total } = req.body;
+    const { product, quantity, status } = req.body;
 
     // Tìm Cart Item dựa trên ID
     const cartItem = await Cart.findOne({ _id: id });
@@ -74,7 +78,7 @@ const update = async (req, res) => {
     // Cập nhật thông tin Cart Item
     cartItem.product = product;
     cartItem.quantity = quantity;
-    cartItem.total = total;
+    cartItem.status = status;
 
     // Lưu thay đổi
     await cartItem.save();

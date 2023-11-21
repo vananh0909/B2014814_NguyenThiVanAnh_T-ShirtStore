@@ -1,6 +1,6 @@
 
 <template>
-  <h3 class="text">Chi tiết đơn hàng</h3>
+  <h3 class="text">Thông Tin Khách Đặt Hàng </h3>
   <div class="d-flex align-items-center justify-content-center vh-30">
     <div class="container text-center">
       <table
@@ -9,24 +9,21 @@
         border="1"
       >
         <tr>
-          <th>STT</th>
-          <th>Mã đơn hàng</th>
-          <th>Tên sản phẩm</th>
-          <th>Giá</th>
-          <th>Số lượng</th>
-          <th>Size</th>
-          <th>Màu sắc</th>
-          <th>Tổng đơn</th>
+          <th>Mã Khách Hàng</th>
+          <th>Tên Khách Hàng</th>
+          <th>Địa Chỉ</th>
+          <th>Số Điện Thoại</th>
+          <th>Email</th>
+          <!-- <th>Ngày Sinh</th> -->
         </tr>
         <tr>
-          <td>1</td>
-          <td>0910</td>
-          <td>DC x GAM Worlds 23</td>
-          <td>690000</td>
-          <td>1</td>
-          <td>M</td>
-          <td>Đen</td>
-          <td>690000</td>
+          <td>{{ data.items.customer._id }}</td>
+          <td>{{ data.items.customer.name }}</td>
+          <td>{{ data.items.customer.address}}</td>
+          <td>0{{ data.items.customer.phone }}</td>
+          <td>{{ data.items.customer.email }}</td>
+          <!-- <td>{{ data.items.customer.birthday }}</td> -->
+
         </tr>
       </table>
     </div>
@@ -35,7 +32,38 @@
 
 
 <script>
-export default {};
+import { onMounted, reactive, ref, onBeforeMount } from 'vue';
+import Customer from "../services/customer.service";
+import { useRouter } from "vue-router";
+import { http_getOne } from '../../../client/src/assets/js/common.http';
+export default {
+  props: {
+    customerId: {
+      type: String,
+      required: true,
+    },
+  },
+  setup(props) {
+    const data = reactive({
+      items:[]
+    })
+    const CusId = ref(null);
+    // const route = useRouter();
+    const fetchCustomerData = async () => {
+      CusId.value = props.customerId;
+      // console.log(CusId.value);
+      data.items = await http_getOne(Customer, CusId.value);
+      console.log(data.items);
+    };
+    onBeforeMount(async() => {
+      await fetchCustomerData();
+      // console.log(props.customerId);
+    })
+    return {
+      data, CusId
+    }
+  }
+};
 </script>
 
 <style scoped>

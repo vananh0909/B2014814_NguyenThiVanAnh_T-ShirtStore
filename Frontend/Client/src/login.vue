@@ -7,7 +7,7 @@
             <h2 class="text-center">Đăng Nhập</h2>
           </div>
           <div class="card-body">
-            <form action="/process-login" method="post">
+            <form @submit.prevent="login">
               <div class="form-group mx-auto">
                 <div class="input-group">
                   <input
@@ -16,6 +16,7 @@
                     id="username"
                     name="username"
                     placeholder="Tên đăng nhập"
+                    v-model="username"
                     required
                   />
                 </div>
@@ -29,6 +30,7 @@
                     id="password"
                     name="password"
                     placeholder="Mật khẩu"
+                    v-model="password"
                     required
                   />
                   <span class="input-group-addon">
@@ -67,26 +69,71 @@
 </template>
   
   <script>
-import Signup from "../view/Signup.vue";
-import VueSweetalert2 from "vue-sweetalert2";
-import "sweetalert2/dist/sweetalert2.min.css";
+import { ref, onMounted } from "vue";
+import axios from "axios";
+import { useRouter } from "vue-router";
+import { alert_error, alert_success } from "@/assets/js/common.alert";
+
 export default {
-  data() {
-    return {
-      showPassword: false,
+  setup() {
+    const showPassword = ref(false);
+    const username = ref("");
+    const password = ref("");
+    const router = useRouter();
+    const togglePasswordVisibility = () => {
+      showPassword.value = !showPassword.value;
     };
-  },
-  methods: {
-    togglePasswordVisibility() {
-      this.showPassword = !this.showPassword;
-    },
-    showSweetAlert() {
-      this.$swal(
-        "Đăng nhập thành công!",
-        "Chào mừng bạn đến với T-Shirt❤️!",
-        "success"
-      );
-    },
+    const login = async () => {
+      try {
+        const response = await axios.post(
+          "http://localhost:3000/api/Accounts/login",
+          {
+            username: username.value,
+            password: password.value,
+          }
+        );
+        // const userRole = response.data.user.role;
+        // if (userRole !== "Admin") {
+        //   alert_error(
+        //     "Truy Cập Bị Từ Chối",
+        //     "Tài Khoản Của Bạn Không Có Quyền Truy Cập Vào Trang Web Này"
+        //   );
+        //   return;
+        // }
+        if (response.data.error === false) {
+          sessionStorage.setItem("token", response.data.token);
+          sessionStorage.setItem("CustomerName", response.data.user.name);
+          sessionStorage.setItem("CustomerId", response.data.user.customerId);
+          sessionStorage.setItem("roleName", response.data.user.role);
+          sessionStorage.setItem("roleId", response.data.user.roleId);
+          location.reload();
+        } else {
+          alert_error("Login", response.data.msg);
+        }
+      } catch (error) {
+        // console.log(error);
+        alert_error("Login", "An error occurred during login.");
+      }
+    };
+
+    // Automatically redirect to qlsp if already logged in
+    const checkLoggedIn = () => {
+      const token = sessionStorage.getItem("token");
+
+      if (token && token !== "undefined") {
+        router.push({ name: "Products" });
+      }
+    };
+
+    onMounted(checkLoggedIn);
+
+    return {
+      username,
+      password,
+      login,
+      togglePasswordVisibility,
+      showPassword,
+    };
   },
 };
 </script>

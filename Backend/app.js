@@ -15,6 +15,7 @@ const ProductRouter = require("./app/routes/Product.route");
 const CartRouter = require("./app/routes/Cart.route");
 const RoleRouter = require("./app/routes/Role.route");
 const CategoryRouter = require("./app/routes/Category.route");
+const OrderRouter = require("./app/routes/Oder.route");
 //use router
 app.use("/api/Customers", CustomerRouter);
 app.use("/api/Accounts", AccountRouter);
@@ -22,6 +23,7 @@ app.use("/api/Products", ProductRouter);
 app.use("/api/Carts", CartRouter);
 app.use("/api/Roles", RoleRouter);
 app.use("/api/Categories", CategoryRouter);
+app.use("/api/Orders", OrderRouter);
 //simple route
 app.get("/", (req, res) => {
   res.json({ messase: "Welcome to T-Shirt Store" });

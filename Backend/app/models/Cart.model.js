@@ -12,11 +12,23 @@ const CartItemSchema = new Schema({
     required: true,
     default: 1,
   },
-  total: {
-    type: Number,
-    require: true,
-    default: 0,
+  color: {
+    type: String,
+    required: true
   },
+  size: {
+    type: String,
+    required: true
+  },
+  customerId: {
+    type: Schema.Types.ObjectId,
+    ref: "Customer",
+    required: true,
+  },
+  status: {
+    type: Boolean,
+    default: false
+  }
 });
 const Cart = mongoose.model("Cart", CartItemSchema);
 

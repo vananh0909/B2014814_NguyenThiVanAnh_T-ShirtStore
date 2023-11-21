@@ -118,7 +118,7 @@ const login = async (req, res, next) => {
       error: false,
       token: token,
       user: {
-        _id: user._id,
+        customerId: user.customerId._id,
         username: user.username,
         name: user.customerId.name, // Include the name of the customer
         roleId: user.roleId._id, // Include the role name

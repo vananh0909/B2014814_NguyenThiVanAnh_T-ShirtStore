@@ -31,8 +31,10 @@ const routes = [
         component: qldonhang,
       },
       {
-        path: "/chitietdon",
+        path: '/chitietdon/:customerId',
+        name: "chitietdon",
         component: chitietdon,
+        props: true,
       },
       {
         path: "/edit/:productId",
