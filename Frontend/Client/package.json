@@ -1,5 +1,5 @@
 {
-  "name": "client",
+  "name": "frontend",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -8,7 +8,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "vue": "^3.3.4"
+    "axios": "^1.6.2",
+    "axois": "^0.0.1-security",
+    "vue": "^3.3.4",
+    "vue-router": "^4.2.5",
+    "vue-sweetalert2": "^5.0.5",
+    "vuex": "^4.1.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.4.0",
