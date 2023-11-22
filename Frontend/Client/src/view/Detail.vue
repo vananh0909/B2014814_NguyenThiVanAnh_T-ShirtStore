@@ -23,7 +23,7 @@
                 <h3 style="text-align: center; font-weight: bold" class="">
                   {{ product.name }}
                 </h3>
-                <p style="margin-left: 28%">{{ product.price }}₫</p>
+                <p style="margin-left: 40%">{{ product.price }}₫</p>
                 <!-- <p>MÔ TẢ SẢN PHẨM</p> -->
                 <div class="gach-ngang"></div>
                 <div class="thongtin">
@@ -199,6 +199,7 @@ export default {
 };
 </script>
 
+
 <style scoped>
 .row {
   display: flex;
@@ -226,6 +227,9 @@ export default {
   color: rgb(40, 40, 40);
   font-family: "Helvetica, Arial", sans-serif;
   text-align: left;
+}
+.thongtin{
+  cursor: pointer;
 }
 .badge {
   margin-left: 10px;
@@ -257,4 +261,17 @@ export default {
   margin-top: 10%;
   margin-bottom: 8%;
 }
+.form-group {
+    display: flex;
+    align-items: center;
+  }
+
+  .form-group label {
+    margin-right: 10px; /* Để tạo khoảng cách giữa label và input */
+  }
+
+  .form-group input {
+    flex: 1; /* Để input mở rộng và đổ dữ liệu theo chiều ngang còn trống */
+    max-width:90px;
+  }
 </style>

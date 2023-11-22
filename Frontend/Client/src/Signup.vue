@@ -1,5 +1,5 @@
 <template>
-  <div class="container mt-5">
+  <div style="margin-bottom: 4%;" class="container mt-5">
     <div class="row justify-content-center">
       <div class="col-md-4">
         <div class="card">
@@ -10,7 +10,7 @@
             <form @submit.prevent="handleSubmit">
               <!-- Tên đăng nhập -->
               <div class="form-group mx-auto">
-                <label for="username">Tên đăng nhập</label>
+                <label style="margin: 3px;" for="username">Tên đăng nhập</label>
                 <div class="input-group">
                   <input
                     v-model="username"
@@ -25,7 +25,7 @@
 
               <!-- Mật khẩu -->
               <div class="form-group mx-auto">
-                <label for="password">Mật khẩu</label>
+                <label style="margin: 3px;" for="password">Mật khẩu</label>
                 <div class="input-group">
                   <input
                     v-model="password"
@@ -62,7 +62,7 @@
                 </div>
               </div>
               <div class="form-group mx-auto">
-                <label for="birthday">Ngày Sinh</label>
+                <label style="margin: 3px;" for="birthday">Ngày Sinh</label>
                 <div class="input-group">
                   <input
                     v-model="birthday"
@@ -76,7 +76,7 @@
               </div>
               <!-- Số điện thoại -->
               <div class="form-group mx-auto">
-                <label for="phone">Số điện thoại</label>
+                <label style="margin: 3px;" for="phone">Số điện thoại</label>
                 <div class="input-group">
                   <input
                     v-model="phone"
@@ -89,7 +89,7 @@
                 </div>
               </div>
               <div class="form-group mx-auto">
-                <label for="email">Email</label>
+                <label style="margin: 3px;" for="email">Email</label>
                 <div class="input-group">
                   <input
                     v-model="email"
@@ -103,7 +103,7 @@
               </div>
               <!-- Địa chỉ -->
               <div class="form-group mx-auto">
-                <label for="address">Địa chỉ</label>
+                <label style="margin: 3px;" for="address">Địa chỉ</label>
                 <div class="input-group">
                   <input
                     v-model="address"
@@ -115,7 +115,7 @@
                   />
                 </div>
               </div>
-              <button type="submit" class="btn btn-primary mt-2" style="float: right">Đăng Ký</button>
+              <button type="submit" class="btn btn-secondary" style="float: right">Đăng Ký</button>
             </form>
           </div>
         </div>
@@ -199,5 +199,13 @@ export default {
 .fa{
  margin:0 auto;
 }
-/* Your existing styles here */
+.btn-secondary{
+  margin-top: 3%;
+  margin-right: 35%;
+
+}
+.btn-secondary:hover {
+  background-color: cadetblue;
+}
+
 </style>

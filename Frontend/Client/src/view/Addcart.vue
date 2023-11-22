@@ -7,16 +7,16 @@
         <div class="item">
           <p style="margin-left: 4px">Sản phẩm</p>
           <p style="margin-left: 200px">Tên</p>
-          <p style="margin-left: 125px">Số lượng</p>
-          <p>Màu</p>
-          <p>Size</p>
-          <p style="margin-left: 125px">Tổng tiền</p>
+          <p style="margin-left: 100px">Số lượng</p>
+          <p style="margin-left: 65px">Màu</p>
+          <p style="margin-left: 38px">Size</p>
+          <p style="margin-left: 80px">Tổng tiền</p>
           <p style="margin-left: 140px">Xóa</p>
         </div>
         <div class="gach-ngang2"></div>
         <div class="nd" v-for="product in data.items">
           <img class="anh" :src="product.product.images" />
-          <div style="margin-left: 80px; margin-top: 40px">
+          <div style="margin-left: 40px; margin-top: 40px">
             <p
               style="
                 font-size: 16px;
@@ -34,7 +34,7 @@
             style="
               display: flex;
               align-items: center;
-              margin-left: 45px;
+              margin-left: 20px;
               /* margin-top: -38px; */
               margin-top: 35px;
               width: 150px;
@@ -51,18 +51,18 @@
             />
             <button @click="incrementQuantity(product)">+</button>
           </div>
-          <div>
-            {{ product.color }}
+          <div style="margin-left: 30px; margin-top: 38px">
+            <p>{{ product.color }}</p>
           </div>
-          <div>
-            {{ product.size }}
+          <div style="margin-left: 45px; margin-top: 38px">
+            <p>{{ product.size }}</p>
           </div>
           <div
             style="
               width: 150px;
               height: 50px;
-              margin-left: 86px;
-              margin-top: 50px;
+              margin-left: 70px;
+              margin-top: 38px;
               overflow: hidden;
               text-overflow: ellipsis;
               font-size: 18px;
@@ -190,7 +190,7 @@ export default {
       const addBuy = await http_create(Order, databuy);
       if (addBuy) {
         for (const cartId of data.idCart) {
-          const existingCartItem = await http_getOne(Cart, cartId); 
+          const existingCartItem = await http_getOne(Cart, cartId);
           const updatePayload = {
             product: existingCartItem.product,
             quantity: existingCartItem.quantity,
@@ -203,17 +203,22 @@ export default {
           if (updateStatus) {
             totalAmount = 0;
           }
-          const updatedQuantity = data.items.find(item => item._id === cartId)?.quantity;
-      if (updatedQuantity !== undefined && updatedQuantity !== existingCartItem.quantity) {
-        updatePayload.quantity = updatedQuantity;
-        const updateStatus = await http_update(Cart, cartId, updatePayload);
+          const updatedQuantity = data.items.find(
+            (item) => item._id === cartId
+          )?.quantity;
+          if (
+            updatedQuantity !== undefined &&
+            updatedQuantity !== existingCartItem.quantity
+          ) {
+            updatePayload.quantity = updatedQuantity;
+            const updateStatus = await http_update(Cart, cartId, updatePayload);
 
-        if (updateStatus) {
-          totalAmount = 0;
+            if (updateStatus) {
+              totalAmount = 0;
+            }
+          }
         }
-      }
-        }
-        
+
         alert_success("Thông Báo", "Bạn đã đặt hàng thành công");
         await refresh();
       }
@@ -237,6 +242,7 @@ export default {
 <style scoped>
 .container {
   height: auto;
+  margin-bottom:5%;
 }
 .gach-ngang {
   border-top: 1px solid #bdbdbd; /* Màu và chiều dày của đường kẻ ngang */
