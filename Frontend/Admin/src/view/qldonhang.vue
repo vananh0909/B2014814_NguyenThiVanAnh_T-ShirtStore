@@ -33,16 +33,37 @@
                   </li>
                 </ul>
               </td>
-              <td v-for="(cartItem, cartIndex) in order.cart" :key="cartIndex">
-                {{ cartItem.quantity }}
+              <td>
+                <ul class="list-unstyled">
+                  <li
+                    v-for="(cartItem, cartIndex) in order.cart"
+                    :key="cartIndex"
+                  >
+                    {{ cartItem.quantity }}
+                  </li>
+                </ul>
               </td>
-              <td v-for="(cartItem, cartIndex) in order.cart" :key="cartIndex">
-                {{ cartItem.color }}
+              <td>
+                <ul class="list-unstyled">
+                  <li
+                    v-for="(cartItem, cartIndex) in order.cart"
+                    :key="cartIndex"
+                  >
+                    {{ cartItem.color}}
+                  </li>
+                </ul>
               </td>
-              <td v-for="(cartItem, cartIndex) in order.cart" :key="cartIndex">
-                {{ cartItem.size }}
+              <td>
+                <ul class="list-unstyled">
+                  <li
+                    v-for="(cartItem, cartIndex) in order.cart"
+                    :key="cartIndex"
+                  >
+                    {{ cartItem.size }}
+                  </li>
+                </ul>
               </td>
-              <td>{{ order.total }}</td>
+              <td>{{ order.total }} đ</td>
               <td>{{ formatCreatedAt(order.createdAt) }}</td>
               <td>
                 <router-link

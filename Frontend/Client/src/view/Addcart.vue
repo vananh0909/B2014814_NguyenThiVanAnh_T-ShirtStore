@@ -137,28 +137,21 @@ export default {
     });
     const refresh = async () => {
       data.items = await http_getAll(Cart);
-      console.log(data.items);
       const id = sessionStorage.getItem("CustomerId");
       data.items = data.items.filter((item) => item.customerId === id);
       data.items = data.items.filter((item) => item.status === false);
       for (const item of data.items) {
         data.idCart.push(item._id);
       }
-      // Now filteredItems contains only items with status === false 
-      console.log(data.idCart);
       data.items.forEach((item) => {
         item.product.totalPrice = item.product.price * item.quantity;
       });
     };
     const incrementQuantity = (product) => {
-      // Increase the quantity by 1
       product.quantity++;
-
-      // Update the total price for the product
       updateTotalPrice(product);
     };
     const decrementQuantity = (product) => {
-      // Check if quantity is greater than 1 before decrementing
       if (product.quantity > 1) {
         product.quantity--;
         updateTotalPrice(product);
@@ -170,22 +163,21 @@ export default {
     };
     let totalAmount = 0;
     const getTotalAmountFormatted = () => {
-      // Iterate through each product in the cart and sum up the total prices
+      totalAmount = 0;
       for (const product of data.items) {
         totalAmount = totalAmount + parseFloat(product.product.totalPrice);
       }
-      console.log(totalAmount);
-      // You might want to format the total amount as needed
-      // For example, if it's a currency, you can use toLocaleString()
       return totalAmount.toLocaleString("vi-VN", {
         style: "currency",
         currency: "VND",
       });
     };
+
     const deleteCart = async (_id) => {
       const dltCart = await http_deleteOne(Cart, _id);
       if (dltCart) {
-        refresh();
+        await refresh();
+        getTotalAmountFormatted();
       }
     };
     const buycart = async () => {
@@ -198,9 +190,7 @@ export default {
       const addBuy = await http_create(Order, databuy);
       if (addBuy) {
         for (const cartId of data.idCart) {
-          const existingCartItem = await http_getOne(Cart, cartId); // Replace with your get function
-
-          // Construct the update payload
+          const existingCartItem = await http_getOne(Cart, cartId); 
           const updatePayload = {
             product: existingCartItem.product,
             quantity: existingCartItem.quantity,
@@ -210,12 +200,22 @@ export default {
             status: true,
           };
           const updateStatus = await http_update(Cart, cartId, updatePayload);
+          if (updateStatus) {
+            totalAmount = 0;
+          }
+          const updatedQuantity = data.items.find(item => item._id === cartId)?.quantity;
+      if (updatedQuantity !== undefined && updatedQuantity !== existingCartItem.quantity) {
+        updatePayload.quantity = updatedQuantity;
+        const updateStatus = await http_update(Cart, cartId, updatePayload);
+
+        if (updateStatus) {
+          totalAmount = 0;
         }
-
-
-        await refresh();
-        location.reload();
+      }
+        }
+        
         alert_success("Thông Báo", "Bạn đã đặt hàng thành công");
+        await refresh();
       }
     };
     onMounted(() => {
