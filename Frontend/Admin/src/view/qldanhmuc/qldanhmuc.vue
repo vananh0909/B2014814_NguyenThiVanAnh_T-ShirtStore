@@ -100,45 +100,47 @@ export default {
   // name: "Headerad",
   setup() {
     const data = reactive({
-      items: [],
-      itemAdd: {},
+      items: [], // lưu danh mục được getAll
+      itemAdd: {}, // luu danh muc duoc tao o v-model template
     });
-
+//khai bao bien router
     const router = useRouter();
     const editCategory = (categoryId) => {
-      // Navigate to the edit page with the product ID
+     //click đi tới edit với id sp tương ứng
       router.push({ name: 'editcategory', params: { categoryId } });
     };
-
+//  click them danh mục
+//dl được nhập v-model template truyền vào data.itemAdd
     const create = async () => {
-      const createCategory = await http_create(Category, data.itemAdd);
+      const createCategory = await http_create(Category, data.itemAdd); // them dl vào vàng category
       console.log(createCategory);
       if(createCategory){
         alert_success("Thông báo", "Bạn đã tạo thành công danh mục sản phẩm");
-        await refresh();
+        await refresh(); //thong báo & chạy 
       }else{
         alert_error("Lỗi", "Tạo danh mục sản phẩm không thành công");
       }
     }
     const deleteCategory = async (item) => {
       // console.log(item);
-      const dltCategory = await http_deleteOne(Category, item._id);
+      //xoa danh muc trong bang category voi item._id la id sp can xoa
+      const dltCategory = await http_deleteOne(Category, item._id); 
       if (dltCategory) {
         alert_success(
           "Xóa Thành Công",
           "Bạn đã xóa thành công danh mục sản phẩm"
         );
-        await refresh();
+        await refresh();//update
       } else {
         alert_error("Lỗi", "Xóa danh mục sản phẩm thất bại");
       }
     };
     const refresh = async () => {
-      data.items = await http_getAll(Category);
+      data.items = await http_getAll(Category); // lay tat ca danh muc trong csdl luu vao data.item
       // console.log(data.items);
     };
     onMounted(async () => {
-      await refresh();
+      await refresh(); // tự động getAll khi truy cập k cần click
     });
     return {
       data,

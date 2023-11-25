@@ -66,7 +66,9 @@
               <td>{{ order.total }} đ</td>
               <td>{{ formatCreatedAt(order.createdAt) }}</td>
               <td>
+                  <!-- duong dan ben router la /chitietdon/:customerId de chuyen trang xem chi tiet khach hang can  -->
                 <router-link
+              
                   :to="{
                     name: 'chitietdon',
                     params: { customerId: order.customer._id },
@@ -97,14 +99,15 @@ import {
 export default {
   setup() {
     const data = reactive({
-      items: [],
-      itemCus: [],
+      items: [], //luu don
+      // itemCus: [],
     });
-    const formatCreatedAt = (createdAt) => {
+    const formatCreatedAt = (createdAt) => { // format ngày tạo đơn
       const date = new Date(createdAt);
-      return date.toLocaleString(); // Adjust the format as needed
+      return date.toLocaleString();  //return lại ngày và giờ
     };
     const refresh = async () => {
+      //get all đơn hàng
       data.items = await http_getAll(Order);
       console.log("data.items", data.items);
       // data.items.forEach((item, index) => {
@@ -113,7 +116,7 @@ export default {
     };
 
     onMounted(async () => {
-      await refresh();
+      await refresh(); 
     });
     return {
       data,

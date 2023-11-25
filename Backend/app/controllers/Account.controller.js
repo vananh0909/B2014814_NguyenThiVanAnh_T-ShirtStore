@@ -94,26 +94,24 @@ const update = async (req, res, next) => {
 };
 const login = async (req, res, next) => {
   try {
-    const { username, password } = req.body;
+    const { username, password } = req.body; // nhận username, pass
 
-    // Find the user by username
-    const user = await Account.findOne({ username: username })
+    const user = await Account.findOne({ username: username }) // tìm username
       .populate('roleId')
       .populate('customerId');
 
-    // Check if the user exists and the password is correct
+    // níu user k tồn tại or pass sai
     if (!user || password !== user.password) {
       return res.status(401).json({
         error: true,
         message: 'Invalid username or password',
       });
     }
-
-    // Generate a JWT token
+    //tạo token = JWT
     const secretKey = 'mysecretkey'; // Replace with a strong secret key
     const token = jwt.sign({ userId: user.id }, secretKey, { expiresIn: '1h' });
 
-    // Return the token and user information
+    // trả về token và thông tin của user
     return res.status(200).json({
       error: false,
       token: token,

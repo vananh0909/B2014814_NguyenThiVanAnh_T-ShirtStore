@@ -47,6 +47,7 @@
       </div>
     </div>
     <Detail v-if="selectedProduct" :product="selectedProduct"></Detail>
+    <!-- Phân trang -->
     <div class="btn-group me-2" role="group" aria-label="Pagination">
       <button
         type="button"
@@ -105,12 +106,10 @@ export default {
     watch(
       () => store.state.filteredItems,
       (newValue, oldValue) => {
-        // console.log("Filtered items changed:", newValue);
-        // Update data.items with the new filtered items
-        data.items = newValue;
+        data.items = newValue; //cap nhat gtri data.item
       }
     );
-    // pagination
+    // phân trang
     const currentPage = ref(1);
     const itemsPerPage = 16;
     const paginatedItems = computed(() => {
@@ -120,18 +119,16 @@ export default {
     });
 
     const changePage = (page) => {
-      // console.log(`Changing page to: ${page}`);
       currentPage.value = page;
     };
     const totalPages = computed(() =>
       Math.ceil(data.items.length / itemsPerPage)
     );
     // detail
-    const selectedProduct = ref(null);
+    const selectedProduct = ref(null); //sp đc choạn
 
     const openDetailModal = (product) => {
-      // console.log("Opening detail modal for product:", product);
-      selectedProduct.value = product;
+      selectedProduct.value = product; //sp đc chọn tưn ứng chiền wa chang detail
     };
     onMounted(async () => {
       await fetchDataPro();

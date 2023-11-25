@@ -37,21 +37,22 @@ import Customer from "../services/customer.service";
 import { useRouter } from "vue-router";
 import { http_getOne } from '../../../client/src/assets/js/common.http';
 export default {
-  props: {
+  props: { //create nhận id kh được gửi khi click xem chi tiết
     customerId: {
       type: String,
       required: true,
     },
   },
-  setup(props) {
+  setup(props) { // truyền xuong day
     const data = reactive({
-      items:[]
+      items:[]//save ttin k.hang
     })
-    const CusId = ref(null);
+    const CusId = ref(null); //de gan id
     // const route = useRouter();
     const fetchCustomerData = async () => {
-      CusId.value = props.customerId;
+      CusId.value = props.customerId; //gan id k.hang
       // console.log(CusId.value);
+      //tim id k.hang trong bảng customer dựa vào CusId
       data.items = await http_getOne(Customer, CusId.value);
       console.log(data.items);
     };

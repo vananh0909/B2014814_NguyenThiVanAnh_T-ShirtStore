@@ -35,37 +35,41 @@ import { alert_success, alert_error } from "../../assets/js/common.alert";
 import { useRouter } from 'vue-router';
 export default {
   setup() {
+    //tao item luu danh muc can sua
     const data = reactive({
       items: [],
     });
-    const categoryId = ref(null);
-    const route = useRoute();
+    const categoryId = ref(null); // de gang id danh muc can sua
+    const route = useRoute(); //khai bao bien router
 
     const fetchCategoryData = async () => {
-      categoryId.value = route.params.categoryId;
-      data.items = await http_getOne(Category, categoryId.value);
+      categoryId.value = route.params.categoryId; //gan category bang id danh muc can sua
+      data.items = await http_getOne(Category, categoryId.value);// lay thong tin danh muc 
       console.log(data.items);
     };
+    //tu dong chay khi load trang. hien thi danh muc vua sua
     onMounted(async () => {
       await fetchCategoryData();
     });
-    const router = useRouter();
+
     const updateCategory = async () => {
       try {
+        const router = useRouter();
+    //cap nhat gia tri danh muc moi
         const updateCate = await http_update(
-          Category,
-          categoryId.value,
-          data.items
+          Category, //bang dl
+          categoryId.value, //id danh muc can cap nhat
+          data.items //du lieu v-model truyen
         );
         if (updateCate) {
-          alert_success("Category updated successfully");
+          alert_success("Category updated successfully"); //sucess ->qlydamuc
           router.push('/'); 
         } else {
-          alert_error("Failed to update category");
+          alert_error("Failed to update category");//k tc
         }
       } catch (error) {
         console.error("Error updating category:", error);
-        alert_error("An error occurred while updating category");
+        alert_error("An error occurred while updating category"); //error 
       }
     };
 

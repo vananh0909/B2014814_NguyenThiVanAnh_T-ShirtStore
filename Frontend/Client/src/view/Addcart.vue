@@ -138,29 +138,30 @@ export default {
     const refresh = async () => {
       data.items = await http_getAll(Cart);
       const id = sessionStorage.getItem("CustomerId");
-      data.items = data.items.filter((item) => item.customerId === id);
-      data.items = data.items.filter((item) => item.status === false);
+      data.items = data.items.filter((item) => item.customerId === id); //lọc theo id kh
+      data.items = data.items.filter((item) => item.status === false); //lọc theo trạng thái giỏ hàng, if == false show ga.
       for (const item of data.items) {
         data.idCart.push(item._id);
       }
       data.items.forEach((item) => {
-        item.product.totalPrice = item.product.price * item.quantity;
+        item.product.totalPrice = item.product.price * item.quantity; // tổng money
       });
     };
     const incrementQuantity = (product) => {
-      product.quantity++;
-      updateTotalPrice(product);
+      product.quantity++; //+ sl
+      updateTotalPrice(product); // cap nhat gia tien
     };
     const decrementQuantity = (product) => {
       if (product.quantity > 1) {
-        product.quantity--;
-        updateTotalPrice(product);
+        product.quantity--; // - sl trên 1 mí chừ 
+        updateTotalPrice(product); // cap nhat gia tien
       }
     };
     const updateTotalPrice = (product) => {
-      // Update the total price based on the new quantity
-      product.product.totalPrice = product.product.price * product.quantity;
+// cập nhựt giá dựa theo sl moi
+      product.product.totalPrice = product.product.price * product.quantity; 
     };
+    // cụm pên phải 
     let totalAmount = 0;
     const getTotalAmountFormatted = () => {
       totalAmount = 0;
@@ -176,41 +177,48 @@ export default {
     const deleteCart = async (_id) => {
       const dltCart = await http_deleteOne(Cart, _id);
       if (dltCart) {
-        await refresh();
-        getTotalAmountFormatted();
+        await refresh(); // cập nhựt lọy dỏ hàng
+        getTotalAmountFormatted(); // tính dá tiền lợi
       }
-    };
+    }; 
+    //mua hàng 
     const buycart = async () => {
-      const id = sessionStorage.getItem("CustomerId");
-      const databuy = {
+      const id = sessionStorage.getItem("CustomerId");//id khách 
+      const databuy = { //thong tin gio hang
         customer: id,
         cart: data.idCart,
         total: totalAmount,
       };
-      const addBuy = await http_create(Order, databuy);
+      // Đặt hàng thành công đưa databuy vào csdl
+      const addBuy = await http_create(Order, databuy); 
       if (addBuy) {
-        for (const cartId of data.idCart) {
+        //chạy qua tất cả id cart vừa mua
+        for (const cartId of data.idCart) { 
+          //lay thong tin 1 gio hang cu the
           const existingCartItem = await http_getOne(Cart, cartId);
-          const updatePayload = {
+          const updatePayload = { // chi cap nhat trang thai . giu nguyen
             product: existingCartItem.product,
             quantity: existingCartItem.quantity,
             color: existingCartItem.color,
             size: existingCartItem.size,
             customerId: existingCartItem.customerId,
-            status: true,
+            status: true, // cập nhựt true dỏ hàng trống
           };
-          const updateStatus = await http_update(Cart, cartId, updatePayload);
+          const updateStatus = await http_update(Cart, cartId, updatePayload);// update
           if (updateStatus) {
             totalAmount = 0;
           }
+          // Bổ sung thêm
+          // ktra xem sl của sản phẩm trong cart hieenj taji # ban dau k
           const updatedQuantity = data.items.find(
             (item) => item._id === cartId
           )?.quantity;
+          //niu #  sl co thay doi cap nhat lai  de hien thi dung trong don hang
           if (
             updatedQuantity !== undefined &&
             updatedQuantity !== existingCartItem.quantity
           ) {
-            updatePayload.quantity = updatedQuantity;
+            updatePayload.quantity = updatedQuantity
             const updateStatus = await http_update(Cart, cartId, updatePayload);
 
             if (updateStatus) {

@@ -8,7 +8,6 @@
           </div>
           <div class="card-body">
             <form @submit.prevent="handleSubmit">
-              <!-- Tên đăng nhập -->
               <div class="form-group mx-auto">
                 <label style="margin: 3px;" for="username">Tên đăng nhập</label>
                 <div class="input-group">
@@ -22,8 +21,6 @@
                   />
                 </div>
               </div>
-
-              <!-- Mật khẩu -->
               <div class="form-group mx-auto">
                 <label style="margin: 3px;" for="password">Mật khẩu</label>
                 <div class="input-group">
@@ -147,6 +144,7 @@ export default {
       showPassword.value = !showPassword.value;
     };
     const router = useRouter();
+    // Khi ng dung click sẽ chạy hàm 
     const handleSubmit = async() => {
       const customer = {
         name: name.value,
@@ -155,16 +153,16 @@ export default {
         email: email.value,
         address: address.value,
       }
-      // console.log(customer);
+       //luu do csdl bảng customer
       const createCustomer = await http_create(Customer, customer);
-      console.log(createCustomer);
-      const account = {
+      const account = { // dữ liệu account
         username: username.value,
         password: password.value,
-        customerId: createCustomer.Customer._id,
-        roleId: "655cb7994abf8034f6449bc4"
+        customerId: createCustomer.Customer._id, // id k.hang vừa tạo 
+        roleId: "655cb7994abf8034f6449bc4" // id của role user
       }
-      const createAccount = await http_create(Account, account);
+      //tạo account
+      const createAccount = await http_create(Account, account); 
       if(createAccount){
         alert_success("Thông Báo", "Bạn đã tạo thành công tài khoản")
         router.push({ name: "Login" });

@@ -88,18 +88,11 @@ export default {
         const response = await axios.post(
           "http://localhost:3000/api/Accounts/login",
           {
-            username: username.value,
+            username: username.value, //post 2 giá trị này để xác thực đăng nhâp
             password: password.value,
           }
         );
-        // const userRole = response.data.user.role;
-        // if (userRole !== "Admin") {
-        //   alert_error(
-        //     "Truy Cập Bị Từ Chối",
-        //     "Tài Khoản Của Bạn Không Có Quyền Truy Cập Vào Trang Web Này"
-        //   );
-        //   return;
-        // }
+//  k lỗi sẽ set những giá trị này 
         if (response.data.error === false) {
           sessionStorage.setItem("token", response.data.token);
           sessionStorage.setItem("CustomerName", response.data.user.name);
@@ -108,17 +101,17 @@ export default {
           sessionStorage.setItem("roleId", response.data.user.roleId);
           location.reload();
         } else {
-          alert_error("Login", response.data.msg);
+          alert_error("Login", response.data.msg); //  lỗi
         }
       } catch (error) {
         // console.log(error);
-        alert_error("Login", "An error occurred during login.");
+        alert_error("Login", "An error occurred during login.");// sai
       }
     };
 
-    // Automatically redirect to qlsp if already logged in
+   
     const checkLoggedIn = () => {
-      const token = sessionStorage.getItem("token");
+      const token = sessionStorage.getItem("token"); // ncó tồn tại token . đn thành công
 
       if (token && token !== "undefined") {
         router.push({ name: "Products" });

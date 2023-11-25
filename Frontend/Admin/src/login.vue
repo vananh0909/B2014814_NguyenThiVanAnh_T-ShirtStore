@@ -77,8 +77,9 @@ export default {
             password: password.value,
           }
         );
-        const userRole = response.data.user.role;
-        if (userRole !== "Admin") {
+        // lấy vai trò tài khoản đăng nhập
+        const userRole = response.data.user.role; 
+        if (userRole !== "Admin") { // ktra xem pải admin k
           alert_error(
             "Truy Cập Bị Từ Chối",
             "Tài Khoản Của Bạn Không Có Quyền Truy Cập Vào Trang Web Này"
@@ -103,9 +104,9 @@ export default {
 
     // Automatically redirect to qlsp if already logged in
     const checkLoggedIn = () => {
-      const token = sessionStorage.getItem("token");
+      const token = sessionStorage.getItem("token"); // lay gtri token
 
-      if (token && token !== "undefined") {
+      if (token && token !== "undefined") {// neu ton tai token 
         router.push({ name: "qlsp" });
       }
     };

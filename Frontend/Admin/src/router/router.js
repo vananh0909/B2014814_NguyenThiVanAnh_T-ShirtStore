@@ -6,6 +6,7 @@ import chitietdon from "../view/chitietdon.vue";
 import editproduct from "../view/qlsanpham/edit.vue";
 import editcategory from "../view/qldanhmuc/edit.vue";
 import login from "../login.vue";
+//Ch dang nhap. chỉ load được trang login
 const routes = [
   {
     path: "/loginadmin",
@@ -15,8 +16,9 @@ const routes = [
   {
     // path: "/",
     // component: () => import("../../src/App.vue"),
-    meta: { requiresAuth: true }, //đánh dấu các trang yêu cầu xác thực
-    children: [
+    meta: { requiresAuth: true }, //đánh dấu các trang yêu cầu xác thực. 
+    //neu meta requiresauth == false đã xác thực rồi. có thể chạy trang bên dưới
+    children: [ 
       {
         path: "/",
         component: qldanhmuc,
@@ -54,8 +56,9 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
 });
+// Kiểm tra xem người dùng đã đăng nhập hay chưa
 router.beforeEach((to, from, next) => {
-  const isAuthenticated = sessionStorage.getItem("token"); // Kiểm tra xem người dùng đã đăng nhập hay chưa
+  const isAuthenticated = sessionStorage.getItem("token"); 
   // console.log(`isAuthenticated `, isAuthenticated);
   // const customerId = sessionStorage.getItem("customerId");
   // const customerName = sessionStorage.getItem("customerName");
@@ -63,10 +66,10 @@ router.beforeEach((to, from, next) => {
   // console.log(customerId, customerName, role);
   if (
     to.matched.some((record) => record.meta.requiresAuth) &&
-    !isAuthenticated
+    !isAuthenticated //ktra người dùng có được xác thực k. False== k có quyền truy cập chuyển hướng
   ) {
     // Nếu trang yêu cầu xác thực và người dùng chưa đăng nhập, chuyển hướng đến trang đăng nhập
-    next({ name: "LoginAdmin" });
+    next({ name: "LoginAdmin" }); // k tồn tại token 
   } else {
     next();
   }

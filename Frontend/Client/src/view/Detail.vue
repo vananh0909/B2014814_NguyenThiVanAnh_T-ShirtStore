@@ -99,33 +99,34 @@ import { useRouter } from "vue-router";
 import Order from "../services/order.service";
 export default {
   props: {
-    product: {
+    product: { // khai báo để nhận giá trị product từ trang product.vue khi click xem chi tiết
       type: Object,
       required: true,
     },
   },
-  setup(props) {
+  setup(props) { // khách hàng chọn 
     const data = reactive({
       itemSize: {},
       itemColor: {},
       quantity: "", //soluong
     });
     const router = useRouter();
-    const showBuy = async() => {
+    const showBuy = async() => { // khai báo biến để lấy token về
       const isAuthenticated = sessionStorage.getItem("token");
-      // console.log(isAuthenticated);
+
+      // nếu == null ch đăng nhập.
       if (isAuthenticated === null) {
         confirm("Bạn cần phải đăng nhập để mua hàng!")
         router.push({ name: "Login" }).then(() => {
           location.reload();
         });
-        // alert_warning("Thông Báo", "Bạn Cần Đăng Nhập Trước Khi Mua Sản Phẩm")
       } else {
         // console.log("Size nè:", data.itemSize);
         // console.log("Màu nè:", data.itemColor);
         // console.log("Số lượng:", data.quantity);
-        const id = sessionStorage.getItem("CustomerId")
-        const dataCart = {
+        // níu đăn nhập r thì mua
+        const id = sessionStorage.getItem("CustomerId") //id khách 
+        const dataCart = { //thong tin gio hang
           customerId: id,
           product: props.product._id,
           quantity: data.quantity,
@@ -134,10 +135,10 @@ export default {
           status: true
         }
         // console.log(dataCart);
-        const addCart = await http_create(Cart, dataCart)
+        const addCart = await http_create(Cart, dataCart) //tao giỏ hàng với status true
         console.log(addCart);
-        const idCus = sessionStorage.getItem("CustomerId");
-        // console.log(idCus);
+        const idCus = sessionStorage.getItem("CustomerId"); //id kh
+        // tạo đơn hàng
         const dataAddnow = {
           customer: idCus,
           total: props.product.price * addCart.quantity,
@@ -156,18 +157,18 @@ export default {
         }
       }
     };
+    // thim dỏ hàng
     const addProduct = async (product) => {
-      const id = sessionStorage.getItem("CustomerId");
-      const dataCart = {
+      const id = sessionStorage.getItem("CustomerId"); //id khách hàng
+      const dataCart = { // thong tin dỏ hàng
         customerId: id,
         product: product._id,
         quantity: data.quantity,
         color: data.itemColor,
         size: data.itemSize,
-        // total: "0",
-        status: false,
+        status: false, // k mua. còn nguyên hiện ga 
       };
-      const addCart = await http_create(Cart, dataCart);
+      const addCart = await http_create(Cart, dataCart); // thiim  bảng cart
       console.log(addCart);
       alert_success(
         "Thêm Thành Công",
@@ -177,8 +178,7 @@ export default {
     // lay size
     const handleSizeClick = (clickedSize) => {
       data.itemSize = clickedSize;
-      // console.log(`Clicked size: ${clickedSize}`);
-    };
+    };  // khi ng dùng clicksẽ gán dô data.itemsize or color
     // lay color
     const handleColorClick = (color) => {
       data.itemColor = color;

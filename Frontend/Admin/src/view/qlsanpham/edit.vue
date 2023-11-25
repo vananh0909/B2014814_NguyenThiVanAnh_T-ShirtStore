@@ -147,45 +147,49 @@ import Category from "../../services/category.service";
 export default {
   setup() {
     const data = reactive({
-      items:[],
-      imgSrc: null,
+      items:[], //luu thong tin sp duoc lay ra
+      imgSrc: null, //luu hinh
     });
+    //save ttin sp duoc truyen qlsp.vue
     const productId = ref(null);
     const route = useRoute();
 
     const fetchProductData = async () => {
+      //gan vao productID gtri ttin sp vua truyen
       productId.value = route.params.productId;
+      //get ttin sp dua vao id
       data.items = await http_getOne(Product, productId.value);
       console.log(data.items);
     };
-    const categories = ref([]); // Add this line
+    const categories = ref([]); 
 
     const fetchCategories = async () => {
-      categories.value = await http_getAll(Category);
-      data.items.category = data.items.category._id;
+      categories.value = await http_getAll(Category);//get all danh mục
+      data.items.category = data.items.category._id;// lọc danh mục dựa theo id dmuc tuong ung cua  sp
     };
     onMounted(async () => {
       await fetchProductData();
-      await fetchCategories();
+      await fetchCategories();//load lai
     });
     const router = useRouter();
     const isImageUploaded = ref(false);
+
     const onFileChange = (event) => {
       console.log("qua met moi");
+      //gan file vua upload
       data.items.images = event.target.files[0];
-
-      // handle display img
-      const files = event.target.files[0];
+      const files = event.target.files[0];// neu co file == true => co up anh
       if (files && files.length > 0) {
         isImageUploaded.value = true;
       } else {
-        isImageUploaded.value = false;
+        isImageUploaded.value = false; // k thi false
       }
       // console.log(data.items.images);
+      //doc nd file anh
       const reader = new FileReader();
 
       console.log("qua met moi1");
-
+//save vao data.imgSrc
       reader.onload = (event) => {
         data.imgSrc = event.target.result;
       };
@@ -196,22 +200,22 @@ export default {
     };
 
     const updateProduct = async (event) => {
-      const formData = new FormData();
+      const formData = new FormData();   //tạo form data để xli , gui dl qua form
       if (isImageUploaded.value == false) {
-        console.log("true rồi", data.items.images);
-        formData.append("images", data.items.images);
+        // console.log("true rồi huhu", data.items.images);
+        formData.append("images", data.items.images); //gan file ảnh mới up
       } else {
         console.log("Không có thay đổi");
       }
       formData.append("name", data.items.name);
       formData.append("price", data.items.price);
-      formData.append("category", data.items.category);
+      formData.append("category", data.items.category); 
       formData.append("sizes", JSON.stringify(data.items.sizes));
       formData.append("colors", JSON.stringify(data.items.colors));
       // formData.append("images", data.items.images);
       formData.append("material", data.items.material);
       formData.append("description", data.items.description);
-
+//update product voi id la productId.value va du lieu nam trong formdata
       const res = await http_update(Product, productId.value, formData);
       if (res) {
         alert_success("Success", "Product updated successfully");
@@ -220,7 +224,7 @@ export default {
         alert_error("Error", "Failed to update product");
       }
     };
-
+//add or delete size and color
     const addSize = () => {
       data.items.sizes.push("");
     };
